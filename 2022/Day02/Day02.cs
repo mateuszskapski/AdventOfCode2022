@@ -21,7 +21,7 @@ public class Day02 : Resolver
         Win = 6
     };
 
-    public Day02(int year, int day) : base(year, day) {}
+    public Day02(int year, int day, string fileName) : base(year, day, fileName) {}
     protected override object PartOne(string input) => CalculateScore(input).Select(x => new char[] {x[0][0], x[1][0]}).Sum(GetMyGameScore);
     protected override object PartTwo(string input) => CalculateScore(input).Sum(FollowElfInstruction);
 

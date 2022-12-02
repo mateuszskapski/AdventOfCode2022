@@ -1,29 +1,26 @@
-﻿int year = 0;
-int day = 0;
+﻿GetFeature().Execute();
 
-if (!ParseArguments())
-    return;
-
-var resolver = Activator.CreateInstance(Type.GetType($"Day{day.ToString("00")}"), year, day) as Resolver;
-var results = resolver?.Run();
-
-Console.WriteLine("*** Part One ***");
-Console.WriteLine($"Answer: {results?.PartOne}");
-Console.WriteLine("*** Part Two ***");
-Console.WriteLine($"Answer: {results?.PartTwo}");
-
-bool ParseArguments()
+IFeature GetFeature()
 {
+    IFeature feature = new NotSupportedFeature("Not defined");
     try
     {
-        year = int.Parse(args[0]);
-        day = int.Parse(args[1]);
+        foreach(var arg in args)
+        {
+            feature = arg switch
+            {
+                "-r" => new ResolverFeature(new ArgumentParser("-r", args)),
+                _ => new NotSupportedFeature(nameof(arg))
+            };
+
+            if (feature is not NotSupportedFeature)
+                return feature;
+        }
     }
     catch
     {
         Console.WriteLine("Invalid arguments.");
-        return false;
     }
 
-    return true;
+    return feature;
 }

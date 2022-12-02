@@ -1,6 +1,6 @@
 public class Day01 : Resolver
 {
-    public Day01(int year, int day) : base(year, day) {}
+    public Day01(int year, int day, string fileName) : base(year, day, fileName) {}
     protected override object PartOne(string input) => GetElfsCaloriesDescending(input).Max();
 
     protected override object PartTwo(string input) => GetElfsCaloriesDescending(input).Take(3).Sum();
