@@ -22,8 +22,8 @@ public class Day02 : Resolver
     };
 
     public Day02(int year, int day) : base(year, day) {}
-    public override object PartOne(string input) => CalculateScore(input).Select(x => new char[] {x[0][0], x[1][0]}).Sum(GetMyGameScore);
-    public override object PartTwo(string input) => CalculateScore(input).Sum(FollowElfInstruction);
+    protected override object PartOne(string input) => CalculateScore(input).Select(x => new char[] {x[0][0], x[1][0]}).Sum(GetMyGameScore);
+    protected override object PartTwo(string input) => CalculateScore(input).Sum(FollowElfInstruction);
 
     IEnumerable<string[]> CalculateScore(string input) =>
         input.Split("\n").Select(x => x.Split(" ").Where(x => !string.IsNullOrEmpty(x)).ToArray());
@@ -49,7 +49,7 @@ public class Day02 : Resolver
         {
             score = (int)Result.Draw + Me[myMove];
         }
-        
+
         return score;
     }
 

@@ -1,26 +1,29 @@
-﻿// See https://aka.ms/new-console-template for more information
-foreach(var arg in args)
-{
-    Console.WriteLine(arg);
-}
+﻿int year = 0;
+int day = 0;
 
-var path = "C:\\Users\\mateusz.skapski\\source\\repos\\AdventOfCode\\2022\\Day02\\input.txt";
-var input = GetInput(path);
+if (!ParseArguments())
+    return;
 
-var resolver = new Day02(2022, 2);
-
-Console.WriteLine($"Reading file {resolver.GetInputFilePath()}");
+var resolver = Activator.CreateInstance(Type.GetType($"Day{day.ToString("00")}"), year, day) as Resolver;
+var results = resolver?.Run();
 
 Console.WriteLine("*** Part One ***");
-Console.WriteLine($"Answer: {resolver.PartOne(input)}");
+Console.WriteLine($"Answer: {results?.PartOne}");
 Console.WriteLine("*** Part Two ***");
-Console.WriteLine($"Answer: {resolver.PartTwo(input)}");
+Console.WriteLine($"Answer: {results?.PartTwo}");
 
-string GetInput(string path)
+bool ParseArguments()
 {
-    var input = File.ReadAllText(path);
-    if (input[input.Length - 1] == '\n')
-        input = input.Substring(0, input.Length - 1);
+    try
+    {
+        year = int.Parse(args[0]);
+        day = int.Parse(args[1]);
+    }
+    catch
+    {
+        Console.WriteLine("Invalid arguments.");
+        return false;
+    }
 
-    return input;
+    return true;
 }
