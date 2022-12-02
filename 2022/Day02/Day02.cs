@@ -16,8 +16,8 @@ public class Day02 : Resolver
 
     enum Result
     {
-        Loss = 0,
-        Drew = 3,
+        Lose = 0,
+        Draw = 3,
         Win = 6
     };
 
@@ -42,16 +42,14 @@ public class Day02 : Resolver
             }
             else
             {
-                score = (int)Result.Loss + Me[myMove];  
+                score = (int)Result.Lose + Me[myMove];  
             }
         }
         else
         {
-            score = (int)Result.Drew + Me[myMove];
+            score = (int)Result.Draw + Me[myMove];
         }
-
-        Console.WriteLine($"Elf {game[0]}, My {game[1]}, Score: {score}");
-
+        
         return score;
     }
 
@@ -62,8 +60,8 @@ public class Day02 : Resolver
 
         switch (expectedGameResult)
         {
-            case 'X': return GetMyGameScore(new char[] { elfMove, GetMoveToLose(elfMove) }); // Loss
-            case 'Y': return GetMyGameScore(new char[] { elfMove, GetMoveToDraw(elfMove) }); // Drew
+            case 'X': return GetMyGameScore(new char[] { elfMove, GetMoveToLose(elfMove) }); // Lose
+            case 'Y': return GetMyGameScore(new char[] { elfMove, GetMoveToDraw(elfMove) }); // Draw
             case 'Z': return GetMyGameScore(new char[] { elfMove, GetMoveToWin(elfMove) }); // Win
         }
 
