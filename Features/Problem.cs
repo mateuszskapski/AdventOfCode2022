@@ -3,7 +3,7 @@ public abstract class Problem
     private readonly int _year;
     private readonly int _day;
     private readonly string _fileName;
-    protected Lazy<string> _input;
+    private Lazy<string> _input;
 
     protected Problem(int year, int day, string fileName)
     {
