@@ -9,7 +9,7 @@ public class Resolver : IFeature
         _parser = parser;
     }
 
-    public Task ExecuteAsync()
+    public async Task ExecuteAsync()
     {
         var year = 0;
         var day = 0;
@@ -23,24 +23,22 @@ public class Resolver : IFeature
         catch
         {
             Console.WriteLine($"Invalid arguments.");
-            return Task.CompletedTask;
+            return;
         }
 
         var problem = Type.GetType($"Day{day.ToString("00")}");
         if (problem is null)
         {
             Console.WriteLine("The problem does not exist, or has not be solved yet.");
-            return Task.CompletedTask;
+            return;
         }
 
         var resolver = Activator.CreateInstance(problem, year, day, FileName) as Problem;
 
-        var results = resolver.Run();
+        var results = await resolver.Run();
         Console.WriteLine("*** Part One ***");
         Console.WriteLine($"Answer: {results.PartOne}");        
         Console.WriteLine("*** Part Two ***");
         Console.WriteLine($"Answer: {results.PartTwo}");
-
-        return Task.CompletedTask;
     }
 }

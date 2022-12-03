@@ -22,11 +22,11 @@ public class Day02 : Problem
     };
 
     public Day02(int year, int day, string fileName) : base(year, day, fileName) {}
-    protected override object PartOne(string input) => CalculateScore(input).Select(x => new char[] {x[0][0], x[1][0]}).Sum(GetMyGameScore);
-    protected override object PartTwo(string input) => CalculateScore(input).Sum(FollowElfInstruction);
+    protected override object PartOne(List<string> input) => CalculateScore(input).Select(x => new char[] {x[0][0], x[1][0]}).Sum(GetMyGameScore);
+    protected override object PartTwo(List<string> input) => CalculateScore(input).Sum(FollowElfInstruction);
 
-    IEnumerable<string[]> CalculateScore(string input) =>
-        input.Split("\n").Select(x => x.Split(" ").Where(x => !string.IsNullOrEmpty(x)).ToArray());
+    IEnumerable<string[]> CalculateScore(List<string> input) =>
+        input.Select(x => x.Split(" ").Where(x => !string.IsNullOrEmpty(x)).ToArray());
 
     int GetMyGameScore(char[] game)
     {

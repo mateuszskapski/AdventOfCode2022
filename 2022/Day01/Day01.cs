@@ -1,12 +1,12 @@
 public class Day01 : Problem
 {
     public Day01(int year, int day, string fileName) : base(year, day, fileName) {}
-    protected override object PartOne(string input) => GetElfsCaloriesDescending(input).Max();
+    protected override object PartOne(List<string> input) => GetElfsCaloriesDescending(input).Max();
 
-    protected override object PartTwo(string input) => GetElfsCaloriesDescending(input).Take(3).Sum();
+    protected override object PartTwo(List<string> input) => GetElfsCaloriesDescending(input).Take(3).Sum();
 
-    IEnumerable<int> GetElfsCaloriesDescending(string input) =>
-        input.Split("\n\n").Select(x => x.Split("\n")
+    IEnumerable<int> GetElfsCaloriesDescending(List<string> input) =>
+        input.Select(x => x.Split("\n")
             .Select(x => int.Parse(x)))
             .Select(x => x.Sum())
             .OrderByDescending(x => x);
