@@ -1,4 +1,4 @@
-public class Day01 : Resolver
+public class Day01 : Problem
 {
     public Day01(int year, int day, string fileName) : base(year, day, fileName) {}
     protected override object PartOne(string input) => GetElfsCaloriesDescending(input).Max();

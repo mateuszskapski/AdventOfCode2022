@@ -1,32 +1,46 @@
-public abstract class Resolver
+public class Resolver : IFeature
 {
-    private readonly int _year;
-    private readonly int _day;
-    private readonly string _fileName;
-    protected Lazy<string> _input;
+    private readonly ArgumentParser _parser;
 
-    protected Resolver(int year, int day, string fileName)
+    public string FileName { get; set; } = "input.txt";
+
+    public Resolver(ArgumentParser parser)
     {
-        _year = year;
-        _day = day;
-        _fileName = fileName;
-        _input = new Lazy<string>(() => GetInput(GetInputFilePath()));
+        _parser = parser;
     }
 
-    public (object PartOne, object PartTwo) Run() => new (PartOne(_input.Value), PartTwo(_input.Value));
-
-    protected abstract object PartOne(string input); 
-    protected abstract object PartTwo(string input); 
-
-    private string GetInputFilePath() =>
-        Path.Combine(new string[] { Directory.GetCurrentDirectory(), _year.ToString(), $"Day{_day.ToString("00")}", _fileName});
-
-    string GetInput(string path)
+    public Task ExecuteAsync()
     {
-        var input = File.ReadAllText(path);
-        if (input[input.Length - 1] == '\n')
-            input = input.Substring(0, input.Length - 1);
+        var year = 0;
+        var day = 0;
 
-        return input;
+        try
+        {
+            var args = _parser.GetArguments<int, int>();
+            year = args.A1;
+            day = args.A2;
+        }
+        catch
+        {
+            Console.WriteLine($"Invalid arguments.");
+            return Task.CompletedTask;
+        }
+
+        var problem = Type.GetType($"Day{day.ToString("00")}");
+        if (problem is null)
+        {
+            Console.WriteLine("The problem does not exist, or has not be solved yet.");
+            return Task.CompletedTask;
+        }
+
+        var resolver = Activator.CreateInstance(problem, year, day, FileName) as Problem;
+
+        var results = resolver.Run();
+        Console.WriteLine("*** Part One ***");
+        Console.WriteLine($"Answer: {results.PartOne}");        
+        Console.WriteLine("*** Part Two ***");
+        Console.WriteLine($"Answer: {results.PartTwo}");
+
+        return Task.CompletedTask;
     }
 }

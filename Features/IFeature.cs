@@ -1,4 +1,4 @@
 public interface IFeature
 {
-    void Execute();
+    Task ExecuteAsync();
 }

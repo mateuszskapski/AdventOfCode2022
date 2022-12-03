@@ -1,4 +1,6 @@
-﻿GetFeature().Execute();
+﻿var baseUrl = "https://adventofcode.com";
+
+await GetFeature().ExecuteAsync();
 
 IFeature GetFeature()
 {
@@ -9,8 +11,9 @@ IFeature GetFeature()
         {
             feature = arg switch
             {
-                "-r" => new ResolverFeature(new ArgumentParser("-r", args)),
-                _ => new NotSupportedFeature(nameof(arg))
+                "-r" => new Resolver(new ArgumentParser("-r", args)),
+                "-u" => new InputDownloader(baseUrl, new ArgumentParser("-u", args)),
+                _ => new NotSupportedFeature(arg.ToString())
             };
 
             if (feature is not NotSupportedFeature)

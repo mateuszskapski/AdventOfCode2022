@@ -1,4 +1,4 @@
-public class Day02 : Resolver
+public class Day02 : Problem
 {
     Dictionary<char, int> Elf = new ()
     {

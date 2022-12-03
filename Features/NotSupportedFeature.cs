@@ -7,8 +7,10 @@ public class NotSupportedFeature : IFeature
         _featureName = featureName;
     }
     
-    public void Execute()
+    public Task ExecuteAsync()
     {
         Console.WriteLine($"Feature '{_featureName}' not supported.");
+
+        return Task.CompletedTask;
     }
 }
