@@ -19,14 +19,7 @@ public class Day03 : Problem
                 hashSet.Add(@char);
             }
 
-            foreach (var @char in right)
-            {
-                if (hashSet.TryGetValue(@char, out _))
-                {
-                    prioritySum += GetPriority(@char);
-                    break;
-                }
-            }
+            CalculateTotalPriority(right, 0, (@char) => hashSet.TryGetValue(@char, out _), ref prioritySum);
         }
 
         return prioritySum;
@@ -39,30 +32,11 @@ public class Day03 : Problem
         
         while (index < input.Count)
         {
-            var first = input[index];
-            var second = input[index + 1];
             var third = input[index + 2];
-            
-            var firstHashSet = new HashSet<char>();
-            foreach (var @char in first)
-            {
-                firstHashSet.Add(@char);
-            }
-            
-            var secondHashSet = new HashSet<char>();
-            foreach (var @char in second)
-            {
-                secondHashSet.Add(@char);
-            }
-            
-            foreach (var @char in third)
-            {
-                if (firstHashSet.TryGetValue(@char, out _) && secondHashSet.TryGetValue(@char, out _))
-                {
-                    prioritySum += GetPriority(@char);
-                    break;
-                }
-            }
+            var firstHashSet = input[index].ToHashSet<char>();
+            var secondHashSet = input[index + 1].ToHashSet<char>();
+
+            CalculateTotalPriority(third, 0, (@char) => firstHashSet.TryGetValue(@char, out _) && secondHashSet.TryGetValue(@char, out _), ref prioritySum);
 
             index += 3;
         }
@@ -70,7 +44,23 @@ public class Day03 : Problem
         return prioritySum;
     }
 
-    int GetPriority(char @char)
+    void CalculateTotalPriority(ReadOnlySpan<char> items, int index, Func<char, bool> conditions, ref int prioritySum)
+    {
+        if (index >= items.Length)
+            return;
+
+        if (conditions.Invoke(items[index]))
+        {
+            prioritySum += GetItemPriority(items[index]);
+            return;
+        }
+
+        CalculateTotalPriority(items, index + 1, conditions, ref prioritySum);
+
+        return;
+    }
+
+    int GetItemPriority(char @char)
     {
         if (char.IsLower(@char))
             return @char-96;
