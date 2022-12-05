@@ -1,4 +1,4 @@
-public class Day04 : Problem
+public class Day04 : Problem<string>
 {
     public Day04(int year, int day, string fileName) : base(year, day, fileName)
     {
@@ -36,6 +36,8 @@ public class Day04 : Problem
         
         return input.Count - doNotOverlap;
     }
+
+    protected override string ProcessLine(string line) => line;
 
     (int Start, int End) GetRange(string pair)
     {

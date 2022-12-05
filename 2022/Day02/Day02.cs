@@ -1,4 +1,4 @@
-public class Day02 : Problem
+public class Day02 : Problem<string>
 {
     Dictionary<char, int> Elf = new ()
     {
@@ -98,4 +98,6 @@ public class Day02 : Problem
         'C' => 'Z',
         _ => throw new ArgumentException("Move not supported")
     };
+
+    protected override string ProcessLine(string line) => line;
 }

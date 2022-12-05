@@ -33,12 +33,20 @@ public class Resolver : IFeature
             return;
         }
 
-        var resolver = Activator.CreateInstance(problem, year, day, FileName) as Problem;
+        var runner = Activator.CreateInstance(problem, year, day, FileName) as Problem;
 
-        var results = await resolver.Run();
-        Console.WriteLine("*** Part One ***");
-        Console.WriteLine($"Answer: {results.PartOne}");        
-        Console.WriteLine("*** Part Two ***");
-        Console.WriteLine($"Answer: {results.PartTwo}");
+        if (runner is not null)
+        {
+            var results = await runner.Run();
+            Console.WriteLine("*** Part One ***");
+            Console.WriteLine($"Answer: {results.PartOne}");        
+            Console.WriteLine("*** Part Two ***");
+            Console.WriteLine($"Answer: {results.PartTwo}");
+        }
+        else
+        {
+            Console.WriteLine("Runner could not be created.");
+            return;
+        }
     }
 }

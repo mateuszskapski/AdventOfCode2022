@@ -1,4 +1,4 @@
-public class Day01 : Problem
+public class Day01 : Problem<string>
 {
     public Day01(int year, int day, string fileName) : base(year, day, fileName) {}
     protected override object PartOne(List<string> input) => Sums.Select(x => x.Value).Max();

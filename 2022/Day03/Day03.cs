@@ -1,4 +1,4 @@
-public class Day03 : Problem
+public class Day03 : Problem<string>
 {
     public Day03(int year, int day, string fileName) : base(year, day, fileName)
     {
@@ -43,6 +43,8 @@ public class Day03 : Problem
         
         return prioritySum;
     }
+
+    protected override string ProcessLine(string line) => line;
 
     void CalculateTotalPriority(ReadOnlySpan<char> items, int index, Func<char, bool> conditions, ref int prioritySum)
     {
