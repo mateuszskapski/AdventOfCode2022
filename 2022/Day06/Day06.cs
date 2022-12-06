@@ -4,7 +4,7 @@ public class Day06 : Problem<string>
     {
     }
 
-    protected override object PartOne(List<string> input) => FindMarkerPosition(input.Skip(0).First(), 4);
+    protected override object PartOne(List<string> input) => FindMarkerPosition(input.First(), 4);
 
     protected override object PartTwo(List<string> input) => FindMarkerPosition(input.First(), 14);
 
@@ -29,6 +29,6 @@ public class Day06 : Problem<string>
                 return j;
         }
 
-        throw new Exception("Marker position not found"); 
+        throw new Exception("Marker position not found."); 
     }
 }
