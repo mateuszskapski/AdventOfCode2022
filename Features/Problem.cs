@@ -45,11 +45,15 @@ public abstract class Problem<T> : Problem
             if (string.IsNullOrEmpty(line) && includeEmptyLine)
                 continue;
 
-            inputLines.Add(ProcessLine(line));    
+            var processedLine = ProcessLine(line);
+            if (processedLine is not null)
+            {
+                inputLines.Add(processedLine);
+            }
         }
 
         return inputLines;
     }
 
-    protected abstract T ProcessLine(string line);
+    protected abstract T? ProcessLine(string line);
 }
