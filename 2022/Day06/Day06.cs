@@ -12,15 +12,14 @@ public class Day06 : Problem<string>
 
     int FindMarkerPosition(string signal, int distinctChars)
     {
-        var chars = new HashSet<char>();
         for (var i = 0; i < signal.Length; i++)
         {
+            var chars = new HashSet<char>();
             var j = i;
             for (; j < i+distinctChars; j++)
             {
-                if(!chars.Add(signal[j]))
+                if (!chars.Add(signal[j]))
                 {
-                    chars.Clear();
                     break;
                 }
             }
