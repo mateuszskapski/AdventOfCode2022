@@ -1,112 +1,61 @@
-public record Position(int x, int y);
-public class Tail
+public class Tail : Head, IObserver<Head>
 {
-    private int _x;
-    private int _y;
-    private readonly Head _head;
-    HashSet<Position> _positions = new HashSet<Position>();
-    public int UniquePositions => _positions.Count;
+    private record Position(int x, int y);
 
-    public Tail(int x, int y, Head head)
+    List<Position> _positions = new List<Position>();
+    public int UniquePositions => _positions.Distinct().Count();
+    public int VisitedPositions => _positions.Count;
+
+    public Tail(int x = 0, int y = 0) : base(x, y)
     {
-        
-        head.PositionChanged += (s, e) => OnPositionChanged(s, e);
-        _x = x;
-        _y = y;
-        _head = head;
         _positions.Add(new Position(x, y));
     }
 
-    private void OnPositionChanged(object sender, HeadPositionChangedEventArgs e)
+    public void OnNext(Head head)
     {
-        if (_head.X == _x && _head.Y == _y)
+        if (head.X == X && head.Y == Y)
             return;
-        if ((_head.X == _x - 1 || _head.X == _x + 1) && Math.Abs(_head.Y - _y) < 2)
+        if (head.X == X && Math.Abs(head.Y - Y) == 1)
             return;
-        if ((_head.Y == _y - 1 || _head.Y == _y + 1) && Math.Abs(_head.X - _x) < 2)
+        if (head.Y == Y && Math.Abs(head.X - X) == 1)
             return;
-
-        switch (e.Direction)
+        if (Math.Abs(head.X - X) == 1 && Math.Abs(head.Y - Y) == 1)
+            return;
+        
+        if (head.X != X && head.Y == Y)
         {
-            case 'U': 
-            {
-                if (Math.Abs(_head.Y - _y) == 2)
-                {
-                    _x = _head.X;
-                    _y = _head.Y - 1;
-                }
-                else
-                {
-                    if (_x > _head.X)
-                        _x--;
-                    else if (_x < _head.X)
-                        _x++;
-                    else
-                        _y++;
-                }
+            // Move left or right
+            X = head.X > X ? ++X : --X;
 
-                _positions.Add(new Position(_x, _y));
-                break;
-            }
-            case 'D': 
-            {
-                if (Math.Abs(_head.Y - _y) == 2)
-                {
-                    _x = _head.X;
-                    _y = _head.Y + 1;
-                }
-                else
-                {
-                    if (_x > _head.X)
-                        _x--;
-                    else if (_x < _head.X)
-                        _x++;
-                    else
-                        _y--;
-                }
-
-                _positions.Add(new Position(_x, _y));
-                break;
-            }
-            case 'R': 
-            {
-                if (Math.Abs(_head.X - _x) == 2)
-                {
-                    _x = _head.X - 1;
-                    _y = _head.Y;
-                }
-                else
-                {
-                    if (_y > _head.Y)
-                        _y--;
-                    else if (_y < _head.Y)
-                        _y++;
-                    else
-                        _x++; 
-                }
-                _positions.Add(new Position(_x, _y));
-                break;
-            }
-            case 'L': 
-            {
-                if (Math.Abs(_head.X - _x) == 2)
-                {
-                    _x = _head.X + 1;
-                    _y = _head.Y;
-                }
-                else
-                {
-                    if (_y > _head.Y)
-                        _y--;
-                    else if (_y < _head.Y)
-                        _y++;
-                    else
-                        _x--; 
-                }
-                _positions.Add(new Position(_x, _y));
-                break;
-            }
-            default: throw new Exception("Invalid move.");
         }
+        else if(head.Y != Y && head.X == X)
+        {
+             // Move up or down
+             Y = head.Y > Y ? ++Y : --Y;
+        }
+        else
+        {
+            // Move diagonally
+            X = head.X > X ? ++X : --X;
+            Y = head.Y > Y ? ++Y : --Y;
+        }
+
+        _positions.Add(new Position(X, Y));
+        if (Observer is not null)
+        {
+            X = X;
+            Y = Y;
+            Observer.OnNext(this);
+        }
+    }
+
+    public void OnCompleted()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnError(Exception error)
+    {
+        throw new NotImplementedException();
     }
 }
