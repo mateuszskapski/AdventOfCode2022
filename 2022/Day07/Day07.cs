@@ -79,7 +79,7 @@ public class Day07 : Problem<Dir>
         var currentDir = topDir;
         using var fileStream = File.OpenRead(path);
         using var reader = new StreamReader(fileStream, Encoding.UTF8, true, 512);
-        string line = string.Empty;
+        var line = string.Empty;
         while ((line = await reader.ReadLineAsync()) is not null)
         {
             if (string.IsNullOrEmpty(line) && includeEmptyLine)

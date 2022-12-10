@@ -4,7 +4,7 @@ public abstract class DownloaderBase : IFeature
     protected int Year {get; init;}
     protected int Day {get; init;}
     protected string SessionKey {get; init;}
-    protected string OutputDirectory {get; private set;}
+    protected string? OutputDirectory {get; private set;}
 
     protected DownloaderBase(string baseUrl, ArgumentParser parser)
     {
