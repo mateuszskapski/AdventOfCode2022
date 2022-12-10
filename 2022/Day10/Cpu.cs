@@ -8,8 +8,9 @@ public class Cpu
     int RegisterX { get; set; } = 1;
     
     public bool Stop { get; set; } = false;
-    public event EventHandler<CpuCycleFinishedEventArgs> CycleStarted;
-    public event EventHandler<CpuCycleFinishedEventArgs> CycleFinished;
+    public event EventHandler<CpuCycleEventArgs> CycleStarted;
+    public event EventHandler<CpuCycleEventArgs> CycleFinished;
+    public event EventHandler<CpuCycleEventArgs> DuringCycle;
 
     public void Push(CpuInstruction instruction) => _instructions.Enqueue(instruction);
 
@@ -17,49 +18,39 @@ public class Cpu
     {
         if (_instructions.TryDequeue(out var instruction))
         {
-            Console.WriteLine($"Processing instruction [{instruction.Type} {instruction.Value}]");
+            //Console.WriteLine($"Processing instruction [{instruction.Type} {instruction.Value}]");
 
-            var instructionCycle = 0;
-            ProcessInstruction(instruction, ref instructionCycle);
+            CycleCounter++;
+            CycleStarted?.Invoke(this, new CpuCycleEventArgs(CycleCounter, RegisterX));
+            ProcessInstruction(instruction);
+            CycleFinished?.Invoke(this, new CpuCycleEventArgs(CycleCounter, RegisterX));
         }
     }
 
     public void ResetRegister() => RegisterX = 1;
 
-    private void ProcessInstruction(CpuInstruction instruction, ref int instructionCycle)
-    {
-        CycleCounter++;
-        instructionCycle++;
-        
-        CycleStarted?.Invoke(this, new CpuCycleFinishedEventArgs(CycleCounter, RegisterX));
-        
+    private void ProcessInstruction(CpuInstruction instruction)
+    {   
+        DuringCycle?.Invoke(this, new CpuCycleEventArgs(CycleCounter, RegisterX));
+
         switch (instruction.Type)
         {
             case "addx": 
             {
-                if (instructionCycle < 2)
-                {
-                    //CycleFinished?.Invoke(this, new CpuCycleFinishedEventArgs(CycleCounter, RegisterX));
-                    ProcessInstruction(instruction, ref instructionCycle);
-                }
-                else
-                {
-                    //CycleFinished?.Invoke(this, new CpuCycleFinishedEventArgs(CycleCounter, RegisterX));
-                    RegisterX += instruction.Value;
-                }
+                CycleCounter++;
+                DuringCycle?.Invoke(this, new CpuCycleEventArgs(CycleCounter, RegisterX));
+                RegisterX += instruction.Value;
             } 
             break;
-            case "noop": break;
+            case "noop":  break;
             default: break;
         }
-
-        CycleFinished?.Invoke(this, new CpuCycleFinishedEventArgs(CycleCounter, RegisterX));
     }
 }
 
-public class CpuCycleFinishedEventArgs : EventArgs
+public class CpuCycleEventArgs : EventArgs
 {
-    public CpuCycleFinishedEventArgs(int cycleCounter, int registerX)
+    public CpuCycleEventArgs(int cycleCounter, int registerX)
     {
         CycleCounter = cycleCounter;
         RegisterX = registerX;
